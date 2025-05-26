@@ -1,0 +1,235 @@
+{
+	"info": {
+		"_postman_id": "YOUR_UNIQUE_COLLECTION_ID",
+		"name": "Restaurant Reservation API",
+		"description": "API for managing restaurant table reservations.",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Table Management",
+			"item": [
+				{
+					"name": "Create Restaurant Table",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"table_number\": \"T101\",\n    \"capacity\": 4\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/v1/tables",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"tables"
+							]
+						},
+						"description": "Creates a new restaurant table. \n\n**Response:**\n```json\n{\n    \"tid\": 1,\n    \"message\": \"Table created successfully\"\n}\n```"
+					},
+					"response": []
+				},
+				{
+					"name": "Create Another Restaurant Table",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"table_number\": \"T102\",\n    \"capacity\": 2\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/v1/tables",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"tables"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Reservation Management",
+			"item": [
+				{
+					"name": "Add New Reservation",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"// Example: pm.test(\"Status code is 201\", function () { pm.response.to.have.status(201); });",
+									"// Example: Capture RID and CID for later use",
+									"// if (pm.response.code === 201) {",
+									"//     const response = pm.response.json();",
+									"//     pm.collectionVariables.set(\"latest_rid\", response.rid);",
+									"//     pm.collectionVariables.set(\"latest_cid\", response.cid);",
+									"//     pm.collectionVariables.set(\"latest_tid_used\", response.tid);",
+									"//     console.log('Set latest_rid to: ' + response.rid);",
+									"// }",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"tid\": 1, \n    \"number_of_people\": 3,\n    \"reservation_date\": \"2025-07-15\",\n    \"reservation_time\": \"19:00:00\",\n    \"last_name\": \"Doe\",\n    \"first_name\": \"John\",\n    \"phone\": \"01234567890\",\n    \"comment\": \"Window seat preferred\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/v1/reservations",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"reservations"
+							]
+						},
+						"description": "Adds a new reservation. \n\n**Note:** Ensure the `tid` exists (created via the 'Create Restaurant Table' endpoint). \n\n**Response:**\n```json\n{\n    \"rid\": 1,\n    \"cid\": 1,\n    \"tid\": 1,\n    \"reservation_date\": \"2025-07-15\",\n    \"reservation_time\": \"19:00:00\",\n    \"number_of_people\": 3,\n    \"status\": \"active\",\n    \"comment\": \"Window seat preferred\",\n    \"message\": \"Reservation created successfully\"\n}\n```"
+					},
+					"response": []
+				},
+				{
+					"name": "Modify Reservation",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"number_of_people\": 4,\n    \"comment\": \"Updated: Birthday celebration\",\n    \"reservation_time\": \"19:30:00\",\n    \"tid\": 2 \n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/v1/reservations/{{rid_example}}",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"reservations",
+								"{{rid_example}}"
+							]
+						},
+						"description": "Modifies an existing reservation. \n\n**Note:** Replace `{{rid_example}}` in the URL with an actual Reservation ID (RID) obtained from creating a reservation. \n\n**Response:**\n```json\n{\n    \"message\": \"Reservation 1 modified successfully\",\n    \"reservation\": {\n        \"rid\": 1,\n        \"tid\": 2,\n        \"cid\": 1,\n        \"status\": \"active\",\n        \"comment\": \"Updated: Birthday celebration\",\n        \"number_of_people\": 4,\n        \"reservation_date\": \"2025-07-15\",\n        \"reservation_time\": \"19:30:00\",\n        \"created_at\": \"2025-05-26T10:00:00.000Z\",\n        \"updated_at\": \"2025-05-26T10:05:00.000Z\"\n    }\n}\n```"
+					},
+					"response": []
+				},
+				{
+					"name": "Cancel Reservation",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/v1/reservations/{{rid_example}}",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"reservations",
+								"{{rid_example}}"
+							]
+						},
+						"description": "Cancels an existing reservation. \n\n**Note:** Replace `{{rid_example}}` in the URL with an actual Reservation ID (RID)."
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Occupancy",
+			"item": [
+				{
+					"name": "Get Occupancy for Next 7 Days",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/v1/occupancy_next_7_days",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"occupancy_next_7_days"
+							]
+						},
+						"description": "Displays the total number of people expected per day for the next 7 days (including today)."
+					},
+					"response": []
+				}
+			]
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "base_url",
+			"value": "http://localhost:5000",
+			"type": "string"
+		},
+		{
+			"key": "rid_example",
+			"value": "1",
+			"type": "string",
+			"description": "Replace with an actual Reservation ID after creating one."
+		}
+	]
+}
