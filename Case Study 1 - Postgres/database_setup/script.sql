@@ -55,4 +55,3 @@ EXECUTE FUNCTION update_reservations_updated_at_column();
 -- You might want indexes for performance
 CREATE INDEX idx_reservations_date ON reservations(reservation_date);
 CREATE INDEX idx_reservations_table_id_date ON reservations(tid, reservation_date);
-CREATE INDEX idx_customers_phone ON customers(phone);
