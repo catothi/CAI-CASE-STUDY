@@ -1,0 +1,8 @@
+python-dotenv
+langchain
+langchain-openai
+langchain-mongodb
+langchain-community
+langchain-core
+pydantic
+psycopg2-binary # Für die PostgreSQL-Verbindung mit SQLDatabase
